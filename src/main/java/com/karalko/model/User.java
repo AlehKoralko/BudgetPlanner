@@ -9,6 +9,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Simple java bean object for represent User
+ *
+ * @author Oleg Korolko
+ * @version 1.0
+ */
+
 @Entity
 @Table(name = "users")
 @Getter
