@@ -9,23 +9,27 @@
 
     <changeSet id="1" author="Aleh Karalko">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="users"/>
-            </not>
+            <and>
+                <not>
+                    <tableExists tableName="users"/>
+                </not>
+                <not>
+                    <tableExists tableName="user_role"/>
+                </not>
+            </and>
         </preConditions>
+
+        <!-- USERS TABLE-->
+
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true" incrementBy="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="username" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
-            <column name="first_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="surname" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="surname" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
@@ -33,17 +37,48 @@
                 <constraints nullable="false"/>
             </column>
             <column name="avatar" type="VARCHAR(255)"/>
+            <column name="active" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <!-- USER_ROLE TABLE -->
+
+        <createTable tableName="user_role">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="roles" type="VARCHAR(64)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseColumnNames="user_id" baseTableName="user_role"
+                constraintName="fk_user_role" referencedColumnNames="id"
+                referencedTableName="users"
+                onDelete="CASCADE" />
+
     </changeSet>
 
     <changeSet id="2" author="Aleh Karalko">
+
+        <!-- INSERT IN USER TABLE -->
+
         <insert tableName="users">
-            <column name="id" valueNumeric="1" type="BIGINT"/>
             <column name="username" value="mocki"/>
             <column name="first_name" value="Oleg"/>
             <column name="surname" value="Korolko"/>
             <column name="email" value="oleg.korolko@mail.ru"/>
-            <column name="password" value="1"/>
+            <column name="password" value="$2a$10$OQetlBRmGS4etcHbm90t5Okw1I8ABKS6C4fBemeokdoAKlVhmJB5e"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+
+        <!-- INSERT IN USER_ROLE TABLE -->
+
+        <insert tableName="user_role">
+            <column name="user_id" valueNumeric="1"/>
+            <column name="roles" value="USER"/>
         </insert>
     </changeSet>
 

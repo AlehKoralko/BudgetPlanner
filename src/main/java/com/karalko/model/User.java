@@ -5,23 +5,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Simple java bean object for represent User
  *
  * @author Oleg Korolko
- * @version 1.0
+ * @version 2.0
  */
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     @Column(name = "username")
@@ -41,4 +40,13 @@ public class User extends BaseEntity {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "active")
+    private boolean active;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
+
 }
