@@ -1,5 +1,6 @@
 package com.karalko.config;
 
+import com.karalko.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().hasRole(Role.USER.name())
                 .and()
                     .formLogin()
                     .permitAll()
                 .and()
                     .logout()
+                    .clearAuthentication(true)
+                    .deleteCookies()
                     .permitAll();
     }
 
@@ -52,4 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    
 }

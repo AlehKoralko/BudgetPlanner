@@ -21,10 +21,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("UserDetailsServiceImpl call the loadUserByUsername method");
+
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         userOptional.orElseThrow(() -> new UsernameNotFoundException("Username is not found!"));
+
+        log.info("User with name - \"{}\" is authorized", username);
 
         return userOptional.map(UserPrincipal::new).get();
     }
